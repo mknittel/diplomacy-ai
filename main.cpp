@@ -5,11 +5,15 @@ int main()
 {
     std::cout << "Hello World!";
 
-    Player a("a");
+/*    Player a("a");
     Player b("b");
 
-    int A[] = {1, 2};
-    Player B[] = {a, b};
+    Province p("a", true, a);
 
-    Board board(A, B);
+    std::vector<Province*> A = {&p, &p};
+    std::vector<Player*> B = {&a,&b};
+*/
+    Board board;
+
+    board.uploadBoard("europe.txt");
 }

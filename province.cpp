@@ -12,14 +12,44 @@
 
 #include "province.hpp"
 
-Province::Province(std::string name, bool hasCenter,
-                    Player controller, int coasts[])
+Province::Province(std::string name)
 : name_(name),
-  hasCenter_(hasCenter),
-  controller_(controller),
-  coasts_(coasts),
-  neighbors_(new Province*[5]),
+  hasCenter_(false),
+  neighbors_(5),
   numNeighbors_(0)
 {
 
+}
+
+void Province::addNeighbor(Province* neighbor)
+{
+    neighbors_.push_back(neighbor);
+}
+
+/*void Province::changeController(Player* controller)
+{
+    controller_ = controller;
+}*/
+
+size_t Province::getNumNeighbors()
+{
+    return neighbors_.size();
+}
+
+std::string Province::getName()
+{
+    return name_;
+}
+
+bool Province::hasNeighbor(Province* province)
+{
+    size_t size = neighbors_.size();
+
+    for (size_t i = 0; i < size; ++i) {
+        if (province->name_ == neighbors_[i]->getName()) {
+            return true;
+        }
+    }
+
+    return false;
 }

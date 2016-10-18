@@ -11,28 +11,42 @@
 #define PROVINCE_HPP_INCLUDED
 
 #include <string>
-#include "player.hpp"
+#include <vector>
 
 class Province {
 public:
     /**
-     * /brief Defines a province with a given name, that may
-     * or may not have a supply center, under a player's 
-     * control (or neutral), with some coasts, and some
-     * neighboring provinces.
-     * 
-     * /post The controller only matters if this province
-     * has a supply center.
+     * \brief Creates a province with the given name.
      */
-    Province(std::string name, bool hasCenter, Player controller, int coasts[]);
+    Province(std::string name);
+
+    /**
+     * \breif Checks if this province has this neighbor.
+     */
+    bool hasNeighbor(Province* province);
+
+    /**
+     * \brief Adds a neighbor province.
+     */
+    void addNeighbor(Province* neighbor);
+
+    /**
+     * \breif Returns the total number of 
+     * neighbors.
+     */
+    size_t getNumNeighbors();
+
+    /**
+     * \brief Returns this province's name.
+     */
+    std::string getName();
 
 private:
     std::string name_;
     bool hasCenter_;
-    Player controller_;
-    int* coasts_;
-    Province** neighbors_;
-    int numNeighbors_;
+    std::vector<Province*> neighbors_;
+    size_t numNeighbors_;
 };
 
 #endif // ifndef PROVINCE_HPP_INCLUDED
+

@@ -1,0 +1,170 @@
+Players:
+Russia
+Turkey
+Austria-Hungary
+Germany
+Italy
+France
+Britain
+
+Land provinces:
+Boh, Sil, Gal, Vie, Trl, Mun
+Bud, Gal, Vie, Tri, Ser, Rum
+Gal, Vie, Boh, Sil, War, Ukr, Rum, Bud
+Tri, Bud, Vie, Trl, Ven, Alb, Ser
+Vie, Gal, Boh, Trl, Tri, Bud
+Cly, Edi, Lpl
+Edi, Cly, Yor, Lpl
+Lpl, Cly, Edi, Yor, Wal
+Lon, Wal, Yor
+Wal, Lpl, Yor, Lon, End
+Yor, Lpl, Edi, Lon, Wal
+Bre, Gas, Par, Pic
+Bur, Mun, Ruh, Bel, Pic, Par, Gas, Mar
+Gas, Bre, Par, Bur, Mar, Spa
+Mar, Pie, Spa, Gas, Bur
+Par, Bur, Gas, Bre, Pic
+Pic, Bel, Bur, Par, Bre
+Ber, Pru, Sil, Mun, Kie,
+Kie, Den, Ber, Mun, Ruh, Hol
+Mun, Ber, Sil, Boh, Tri, Bur, Ruh, Kie
+Pru, Lvn, War, Sil, Ber
+Ruh, Kie, Mun, Bur, Bel, Hol
+Sil, Pru, War, Gal, Boh, Mun, Ber
+App, Nap, Rom, Ven
+Nap, App
+Pie, Ven, Tus, Mar
+Rom, App, Nap, Tus, Ven
+Tus, Ven, Rom, Pie
+Ven, Trl, Tri, App, Rom, Tus, Pie
+Lvn, Pru, War, Mos, Stp
+Mos, Stp, Lvn, War, Ukr, Sev
+Sev, Mos, Ukr, Rum, Arm
+Stp, Fin, Lvn, Mos
+Ukr, Mos, War, Gal, Rum, Sev
+War, Mos, Lvn, Pru, Sil, Gal, Ukr
+Ank, Con, Smy, Arm 
+Arm, Ank, Smy, Syr, Sev
+Con, Ank, Smy, Bul
+Smy, Ank, Arm, Syr, Con
+Syr, Arm, Smy
+Alb, Gre, Ser, Tri
+Bel, Pic, Bur, Ruh, Hol
+Bul, Con, Gre, Ser, Rum
+Fin, Stp, Swe, Nwy
+Gre, Alb, Ser, Bul
+Hol, Kie, Ruh, Bel
+Nwy, Stp, Fin, Swe
+Naf, Tun
+Por, Spa
+Rum, Sev, Ukir, Gal, Bud, Ser, Bul
+Ser, Rum, Bul, Gre, Alb, Tri, Bud
+Spa, Gas, Mar, Por
+Swe, Nwy, Fin, Den
+Tun, Naf
+Den, Swe, Kie
+
+Sea provinces:
+Adr, Tri, coast, Ven, coast, App, coast, Ion, Alb, coast
+Aeg, Gre, coast, Con, coast, Smy, coast, Eas, Ion, Bul, north
+Bal, Bot, Lvn, coast, Pru, coast, Ber, coast, Kie, coast, Den, coast, Swe, coast
+Bar, Stp, north, Nwy, coast, Nrg
+Bla, Sev, coast, Arm, coast, Ank, coast, Con, coast, Bul, south, Rum, coast
+Eas, Syr, coast, Smy, coast, Aeg, Ion
+Eng, Lon, coast, Wal, coast, Iri, Mid, Bre, coast, Pic, coast, Bel, coast
+Bot, Fin, coast, Stp, south, Lvn, coast, Bal, Swe, coast
+Lyo, Tyn, Wes, Spa, south, Mar, coast, Pie, coast, Tus, coast
+Hel, Sen, coast, Kie, coast, Hol, coast, Nth
+Ion, Eas, Aeg, Gre, coast, Alb, coast, Adr, App, coast, Nap, coast, Tyn, Tun, coast
+Iri, Lpl, coast, Wal, coast, Eng, Mid, Nat
+Mid, Nat, Iri, Eng, Bre, coast, Gas, coast, Spa, north, Spa, south, Por, coast, Naf, coast
+Nat, Nrg, Cly, coast, Iri, Mid
+Nth, Nwy, coast, Ska, Den, coast, Hel, Hol, coast, Bel, coast, Eng, Lon, coast, Yor, coast, Edi, coast, Nrg
+Nrg, Bar, Nwy, coast, Nth, Edi, coast, Cly, coast, Nat
+Ska, Swe, coast, Den, coast, Nth, Nwy, coast, Bal
+Tyn, Tus, coast, Rom, coast, Nap, coast, Ion, Tun, coast, Wes, Lyo
+Wes, Lyo, Tyn, Tun, coast, Naf, coast, Spa, south
+
+Coasts:
+Tri, coast, Ven, coast, Adr, Alb, coast
+Cly, coast, Edi, coast, Nrg, Nat, Lpl, coast
+Edi, coast, Cly, coast, Nrg, Nth, Yor, coast
+Lpl, coast, Cly, coast, Nat, Iri, Wal, coast
+Lon, coast, Yor, coast, Nth, Eng, Wal, coast
+Wal, coast, Lpl, coast, Lon, coast, Eng, Iri
+Yor, coast, Edi, coast, Nth, Lon, coast
+Bre, coast, Pic, coast, Gas, coast, Eng, Mid
+Gas, coast, Bre, coast, Spa, north, Mid
+Mar, coast, Lyo, Pie, coast, Spa, south
+Pic, coast, Bel, coast, Bre, coast, Eng
+Ber, coast, Bal, Kie, coast, Pru, coast
+Kie, coast, Ber, coast, Hel, Den, coast, Hol, coast
+Pru, coast, Lvn, coast, Ber, coast, Bal
+App, coast, Ven, coast, Nap, coast, Adr, Ion
+Nap, coast, Rom, coast, App, coast, Tyn, Ion
+Pie, coast, Mar, coast, Tus, coast, Lyo
+Rom, coast, Tus, coast, Nap, coast, Tyn
+Tus, coast, Pie, coast, Rom, coast, Tyn, Lyo
+Ven, coast, Tri, coast, App, coast, Adr
+Lvn, coast, Pru, coast, Stp, south, Bot, Bal
+Sev, coast, Bla, Rum, coast, Arm, coast
+Stp, north, Bar, Nwy, coast
+Stp, south, Lvn, coast, Fin, coast, Bot
+Ank, coast, Arm, coast, Con, coast, Bla
+Arm, coast, Bla, Sev, coast, Ank, coast
+Con, coast, Ank, coast, Smy, coast, Bul, north, Bul, south, Bla, Aeg
+Smy, coast, Con, coast, Syr, coast, Eas, Aeg
+Syr, coast, Eas, Smy, coast,
+Alb, coast, Tri, coast, Gre, coast, Adr, Ion
+Bel, coast, Hol, coast, Pic, coast, Nth, Eng
+Bul, north, Bla, Con, coast, Rum, coast
+Bul, south, Aeg, Con, coast, Gre, coast
+Fin, coast, Swe, coast, Stp, south, Bot
+Gre, coast, Alb, coast, Bul, south, Ion, Aeg
+Hol, coast, Bel, coast, Kie, coast, Hel, Nth
+Nwy, coast, Stp, north, Swe, coast, Bar, Nrg, Nth, Ska
+Naf, coast, Mid, Wes, Tun, coast
+Por, coast, Spa, north, Spa, south, Mid
+Rum, coast, Sev, coast, Bul, north, Bla
+Spa, north, Por, coast, Gas, coast, Mid
+Spa, south, Por, coast, Mid, Wes, Lyo, Mar, coast
+Swe, coast, Nwy, coast, Den, coast, Fin, coast, Ska, Bal, Bot
+Tun, coast, Naf, coast, Wes, Tyn, Ion
+Den, coast, Hel, Kie, coast, Bal, Ska, Nth
+
+Neutral supply centers:
+Por
+Spa
+Bel
+Hol
+Nwy
+Swe
+Tun
+Rum
+Ser
+Bul
+Gre
+Den
+Kie
+Ber
+Mun
+Lon
+Edi
+Lpl
+Bre
+Par
+Mar
+Ven
+Rom
+Nap
+Vie
+Bud
+Tri
+Con
+Ank
+Smy
+Mos
+Stp
+War
+
+endoffile
