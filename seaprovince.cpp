@@ -18,4 +18,3 @@ void SeaProvince::addCoast(Coast* coast)
     adjacentCoasts_.push_back(coast);
     addNeighbor(new SeaProvince("hi"));
 }
-

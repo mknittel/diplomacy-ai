@@ -1,11 +1,11 @@
 Players:
-Russia
-Turkey
-Austria-Hungary
-Germany
-Italy
-France
-Britain
+Russia, Mos, War, Sev
+Turkey, Con, Ank, Smy
+Austria-Hungary, Vie, Bud, Tri
+Germany, Kie, Ber, Mun
+Italy, Ven, Rom, Nap
+France, Par, Bre, Mar
+Britain, Edi, Lpl, Lon
 
 Land provinces:
 Boh, Sil, Gal, Vie, Trl, Mun

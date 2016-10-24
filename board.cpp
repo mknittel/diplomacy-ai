@@ -13,26 +13,6 @@
 #include <algorithm>
 #include "board.hpp"
 
-static std::vector<std::string> split(std::string input, std::string delimeter)
-{
-    std::string word = "";
-    std::vector<std::string> splitString(40);
-
-    for (size_t i = 0; i < input.size(); ++i) {
-        if (input.substr(i,delimeter.size()) == delimeter) {
-            splitString.push_back(word);
-            word = "";
-            i += delimeter.size() - 1;
-        } else {
-            word += input[i];
-        }
-    }
-
-    splitString.push_back(word);    
-
-    return splitString;
-}
-
 Board::Board()
 {
     Player neutral("Neutral");
@@ -50,7 +30,7 @@ void Board::uploadBoard(std::string filename)
     interpretFile(filename, &landProvinces, &seaProvinces, &coastStrings,
                   &playerStrings, &centerStrings);
 
-    // Populate plyaers
+    // Populate players
     for (size_t i = 0; i < playerStrings.size(); ++i) {
         Player player(playerStrings[i][0]);
         players_.push_back(player);
@@ -88,8 +68,29 @@ void Board::uploadBoard(std::string filename)
     linkLand(landProvinces);
     linkSeas(seaProvinces);
     addCenters(centerStrings);
+    setHomes(playerStrings);
 
     updateLandNeighbors();
+}
+
+void Board::executeMoves(std::string filename)
+{
+    MoveParser parser;
+
+    std::vector<Province*> provinces;
+
+    for (size_t i = 0; i < landProvinces_.size(); ++i) {
+        Province* province = &(landProvinces[i]);
+        provinces.push_back(province);
+    }
+
+    for (size_t i = 0; i < seaProvinces_.size(); ++i) {
+        Province* province = &(seaProvinces[i]);
+        provinces.push_back(province);
+    }
+
+    parser.readMoves(filename, provinces);
+
 }
 
 void Board::updateLandNeighbors()
@@ -120,6 +121,38 @@ int Board::getSeaProvince(std::string name, SeaProvince* province)
         }
     }
 
+    return 0;
+}
+
+int Board::getProvince(std::string name, Province* province)
+{
+    for (size_t i = 0; i < seaProvinces_.size(); ++i) {
+        if (name == seaProvinces_[i].getName()) {
+            province = &seaProvinces_[i];
+            return 1;
+        }
+    }
+
+    for (size_t i = 0; i < landProvinces_.size(); ++i) {
+        if (name == landProvinces_[i].getName()) {
+            province = &landProvinces_[i];
+            return 1;
+        }
+    }
+    
+
+    return 0;
+}
+
+int Board::getPlayer(std::string name, Player* player)
+{
+    for (size_t i = 0; i < players_.size(); ++i) {
+        if (name == players_[i].getName()) {
+            player = &players_[i];
+            return 1;
+        }
+    }
+    
     return 0;
 }
 
@@ -275,6 +308,25 @@ void Board::linkSeas(std::vector<std::vector<std::string>> seaProvinces)
                 }
             }
         } 
+    }
+}
+
+void Board::setHomes(std::vector<std::vector<std::string>> playerStrings)
+{
+    for (size_t i = 0; i < playerStrings.size(); ++i) {
+        std::vector<std::string> playerString = playerStrings[i];
+
+        for (size_t j = 1; j < playerString.size(); ++j) {
+            std::string provinceName = playerString[j];
+            LandProvince* province;
+            int status = getLandProvince(provinceName, province);
+
+            if (status == 1) {
+                players_[i].addHomeCenter(province);
+            } else {
+                std::cout << "Error: invalid home for player.\n";
+            }
+        }
     }
 }
 

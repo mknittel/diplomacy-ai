@@ -16,6 +16,7 @@
 #include "province.hpp"
 #include "landprovince.hpp"
 #include "seaprovince.hpp"
+#include "moveparser.hpp"
 
 class Board {
 public:
@@ -36,11 +37,16 @@ public:
      */
     void uploadBoard(std::string filename);
 
+    /**
+     * \brief Uploads and executes a Spring/Fall move from a file.
+     */
+    void executeMoves(std::string filename);
+
 private:
     std::vector<LandProvince> landProvinces_;
     std::vector<SeaProvince> seaProvinces_;
     std::vector<Player> players_;
-
+    
 
     // Helper for uploadBoards, updates neighbors of land provinces
     void updateLandNeighbors();
@@ -50,6 +56,12 @@ private:
 
     // Helper for uploadBoards, retrieves a pointer to province if exists
     int getSeaProvince(std::string name, SeaProvince* province);
+
+    // Helper for executeMoves, retrieves a pointer to province if exists
+    int getProvince(std::string name, Province*);
+
+    // Helper for executeMoves, retrieves a pointer to the player if exists
+    int getPlayer(std::string name, Player* player);
 
     // Helper for uploadBoards, reads file
     void interpretFile(std::string filename,
@@ -68,6 +80,9 @@ private:
 
     // Helper for uploadBoards, links seas
     void linkSeas(std::vector<std::vector<std::string>> seaProvinces);
+
+    // Helper for uploadBoards, gives players home centers
+    void setHomes(std::vector<std::vector<std::string>> playerStrings);
 
     // Helper for uploadBoards, makes neutral centers
     void addCenters(std::vector<std::string> centerStrings);

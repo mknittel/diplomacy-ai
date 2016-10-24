@@ -26,11 +26,6 @@ void Province::addNeighbor(Province* neighbor)
     neighbors_.push_back(neighbor);
 }
 
-/*void Province::changeController(Player* controller)
-{
-    controller_ = controller;
-}*/
-
 size_t Province::getNumNeighbors()
 {
     return neighbors_.size();

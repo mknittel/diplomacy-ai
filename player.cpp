@@ -24,3 +24,25 @@ void Player::removeSupplyCenter(LandProvince* landProvince)
         }
     }
 }
+
+std::string Player::getName()
+{
+    return name_;
+}
+
+int Player::getUnit(Player::Unit::Type type, std::string location, Unit* unit)
+{
+    for (size_t i = 0; i < units_.size(); ++i) {
+        if (units_[i].type_ == type && units_[i].location_->getName() == location) {
+            unit = &units_[i]; 
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+void Player::addHomeCenter(LandProvince* landProvince)
+{
+    home_.push_back(landProvince);
+}
