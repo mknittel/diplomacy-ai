@@ -22,7 +22,7 @@ public:
     /**
      * \brief Adds a coast adjacent to the province.
      */
-    void addCoast(Coast* coast);
+    void addCoast(Coast* coast, Province* province);
 
 private:
     std::vector<Coast*> adjacentCoasts_;

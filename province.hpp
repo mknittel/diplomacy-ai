@@ -15,6 +15,8 @@
 
 class Province {
 public:
+    Province();
+
     /**
      * \brief Creates a province with the given name.
      */
@@ -41,8 +43,25 @@ public:
      */
     std::string getName();
 
+    /**
+     * \brief Returns whether or not this province has
+     * supply cener.
+     */
+    bool hasCenter();
+
+    /**
+     * \brief Sets the player controller name.
+     */
+    void setController(std::string name);
+    
+    /**
+     * \brief Gets the player controller name.
+     */
+    std::string getController();
+
 private:
     std::string name_;
+    std::string controller_;
     bool hasCenter_;
     std::vector<Province*> neighbors_;
     size_t numNeighbors_;

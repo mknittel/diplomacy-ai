@@ -9,20 +9,17 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include "player.hpp"
 #include "landprovince.hpp"
 #include "coast.hpp"
 
-void LandProvince::addCoast(Coast* coast)
+void LandProvince::addCoast(Coast* coast, std::vector<Province*> neighbors)
 {
     coasts_.push_back(coast);
 
-    std::vector<Coast*> connections = coast->getConnections();
-    size_t size = connections.size();
-
-    for (size_t i = 0; i < size; ++i) {
-        Coast* connection = connections[i];
-        LandProvince* province = connection->getProvince();
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        Province* province = neighbors[i];
         
         if (!hasNeighbor(province)) {
             addNeighbor(province);
@@ -30,7 +27,7 @@ void LandProvince::addCoast(Coast* coast)
     }
 }
 
-void LandProvince::updateNeighbors()
+/*void LandProvince::updateNeighbors()
 {
     for (size_t i = 0; i < coasts_.size(); ++i) {
         Coast* coast = coasts_[i];
@@ -44,26 +41,36 @@ void LandProvince::updateNeighbors()
             }
         }
     }
-}
+}*/
 
 std::vector<Coast*> LandProvince::getCoasts()
 {
     return coasts_;
 }
 
-int LandProvince::getCoast(std::string name, Coast* coast)
+Coast* LandProvince::getCoast(std::string name)
 {
     for (size_t i = 0; i < coasts_.size(); ++i) {
+        std::cout<<"Found coast: " << coasts_[i]->getName()<<"\n";
         if (coasts_[i]->getName() == name) {
-            coast = coasts_[i];
-            return 1;
+            return coasts_[i];
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 void LandProvince::makeCenter()
 {
     isCenter_ = true;
+}
+
+void LandProvince::printCoasts()
+{
+    std::cout << "Coasts for " << getName() << ": ";
+
+    for (size_t i = 0; i < coasts_.size(); ++i) {
+        std::cout<<coasts_[i]->getName()<<", ";
+    }
+    std::cout<<"\n";
 }

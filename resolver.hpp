@@ -16,62 +16,27 @@
 
 class Resolver {
 public:
-    struct Hold {
-        std::string prov_;
-        std::string player_;
-    };
-
-    struct Convoy {
-        std::string dest_;
-        std::string start_;
-        std::vector<std::string> convoy_;
-        std::string player_;
-    };
-
-    struct Move {
-        std::string dest_;
-        std::string start_;
-        std::string player_;
-
-        std::string coast_; // May or may no exist, refers to destination coast
-    };
-
-    struct Support {
-        std::string prov_;
-        std::string player_;
-    };
-
-    struct SupportHold : Support {
-        Hold* hold_;
-    };
-
-    struct SupportConvoy : Support {
-        Convoy* convoy_;
-    };
-
-    struct SupportMove : Support {
-        Move* move_;
-    };
+    /**
+     * \brief Constructs resolver with given moves, players, provinces.
+     */
+    Resolver(Player::MoveSet        moveSet,
+             std::vector<Province*> provinces,
+             std::vector<Player*>   players);
 
     /**
-     * \breif Constructs resolver with given moves, players, provinces.
+     * \brief Resolves moves.
      */
-    Resolver(std::vector<Hold>          holds,
-             std::vector<Convoy>        convoys,
-             std::vector<Move>          moves,
-             std::vector<SupportHold>   supportHolds,
-             std::vector<SupportConvoy> supportConvoys,
-             std::vector<SupportMove>   supportMoves,
-             std::vector<Province*>     provinces,
-             std::vector<Player*>       players);
+    std::vector<std::string> resolve();
 
 private:
-    std::string writeHold(Resolver::Hold hold);
-    std::string writeConvoy(Resolver::Convoy convoy, std::string& convoysPred);
-    std::string writeMove(Resolver::Move move);
-    std::string writeSupportHold(Resolver::SupportHold supportHold);
-    std::string writeSupportConvoy(Resolver::SupportConvoy supportConvoy);
-    std::string writeSupportMove(Resolver::SupportMove supportMove);
+    std::string writeHold(Player::Hold hold);
+    std::string writeConvoy(Player::Convoy convoy, std::string& convoysPred);
+    std::string writeMove(Player::Move move);
+    std::string writeSupportHold(Player::SupportHold supportHold);
+    std::string writeSupportConvoy(Player::SupportConvoy supportConvoy);
+    std::string writeSupportMove(Player::SupportMove supportMove);
+
+    //Player::MoveSet makeMoveSet(std::vector<std::string> moveStrings);
 };
 
 #endif // ifndef RESOLVER_HPP_INCLUDED

@@ -11,7 +11,7 @@
 #include <iterator>
 #include <algorithm>
 #include "moveparser.hpp"
-#include "castor1.1/castor.h"
+#include "resolver.hpp"
 
 static std::vector<std::string> split(std::string input, std::string delimeter)
 {
@@ -36,51 +36,77 @@ static std::vector<std::string> split(std::string input, std::string delimeter)
 static bool isProvinceName(std::string name, std::vector<Province*> provinces)
 {
     for (size_t i = 0; i < provinces.size(); ++i) {
-        if (provinces[i].getName() == name) {
+        if (provinces[i]->getName() == name) {
             return true;
         }
     }
 }
 
-int MoveParser::findConvoy(std::string start, Resolver::Convoy* convoy)
+static bool contains(std::string container, std::string containee)
 {
-    for (size_t i = 0; i < convoys_.size(); ++i) {
-        if (start == convoys[i]->start_) {
-            convoy = &(convoys[i]);
+    for (size_t i = 0; i < container.size() - containee.size(); ++i) {
+        if (container.substr(i, containee.size()) == containee) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+MoveParser::MoveParser()
+{
+}
+
+MoveParser::MoveParser(std::vector<Province*> provinces, std::vector<Player*> players)
+: provinces_(provinces),
+  players_(players)
+{
+
+}
+
+int MoveParser::findConvoy(std::string start, Player::Convoy* convoy)
+{
+    for (size_t i = 0; i < moveSet_.convoys_.size(); ++i) {
+        if (start == moveSet_.convoys_[i].start_) {
+            convoy = &(moveSet_.convoys_[i]);
             return 1;
+        }
     }
 
     return 0;
 }
 
-int MoveParser::findHold(std::string start, Resolver::Hold* hold)
+int MoveParser::findHold(std::string start, Player::Hold* hold)
 {
-    for (size_t i = 0; i < holds_.size(); ++i) {
-        if (start == holds[i]->start_) {
-            hold = &(holds[i]);
+    for (size_t i = 0; i < moveSet_.holds_.size(); ++i) {
+        if (start == moveSet_.holds_[i].prov_) {
+            hold = &(moveSet_.holds_[i]);
             return 1;
+        }
     }
 
     return 0;
 }
 
-int MoveParser::findMove(std::string start, Resolver::Move* hold)
+int MoveParser::findMove(std::string start, Player::Move* move)
 {
-    for (size_t i = 0; i < holds_.size(); ++i) {
-        if (start == holds[i]->start_) {
-            hold = &(holds[i]);
+    for (size_t i = 0; i < moveSet_.moves_.size(); ++i) {
+        if (start == moveSet_.moves_[i].start_) {
+            move = &(moveSet_.moves_[i]);
             return 1;
+        }
     }
 
     return 0;
 }
 
-void MoveParser::readMoves(std::string filename, std::vector<Province*> provinces)
+void MoveParser::readMoves(std::string filename)
 {
-    std::vector<Resolver::Move> moves;
+    Player::MoveSet moveSet; 
+    moveSet_ = moveSet;
 
     std::ifstream file{filename};
-    std::string nextLine("");
+    std::string nextLine = "";
     file >> nextLine;
 
     while (nextLine != "endoffile") {
@@ -88,98 +114,187 @@ void MoveParser::readMoves(std::string filename, std::vector<Province*> province
         file >> nextLine;
 
         while (nextLine != "") {
-            std::vector<std::string> words(split(nextline, " "));
+            std::vector<std::string> words(split(nextLine, " "));
             std::string type;
-            std::string coast; 
-
-            // 1st or second word is province, check which
-            if (isProvinceName(words[1]), provinces) {
-                type = words[2];
-            } else {
-                type = words[3];
-                coast = words[1];
-                words.erase(words.begin() + 1); // Remove coast word
-            }
 
             if (type == "hold") {
-                Resolver::Hold hold;
+                Player::Hold hold;
                 hold.prov_ = words[1];
                 hold.player_ = player;
 
-                holds_.push_back(hold);
+                moveSet_.holds_.push_back(hold);
             } else if (type == "convoy") {
-                Resolver::Convoy* searchConvoy;
+                Player::Convoy* searchConvoy;
 
                 if (findConvoy(words[3], searchConvoy) == 1) {
                     searchConvoy->convoy_.push_back(words[1]);
                 } else {
-                    Resolver::Convoy convoy;
+                    Player::Convoy convoy;
                     convoy.start_ = words[4];
                     convoy.dest_ = words[6];
                     convoy.player_ = player;
-                    convoy.convoy_.push_back(words[1];
+                    convoy.convoy_.push_back(words[1]);
 
-                    convoys_.push_back(convoy);
+                    moveSet_.convoys_.push_back(convoy);
                 }
             } else if (type == "to") {
-                Resolver::Move move;
+                Player::Move move;
                 move.start_ = words[1];
                 move.dest_ = words[3];
                 move.player_ = player;
 
-                moves_.push_back(move);
+                moveSet_.moves_.push_back(move);
             } else if (type == "support") {
                 std::string supportType = words[5];
                 std::string province = words[1];
-                std::vector<std::string> supportedStart = words[3];
+                std::string supportedStart = words[3];
 
                 if (supportType == "hold") {
-                    Resolver::Hold* hold;
+                    Player::Hold* hold;
                     findHold(supportedStart, hold);
 
-                    Resolver::SupportHold support;
+                    Player::SupportHold support;
                     support.prov_ = province;
                     support.player_ = player;
                     support.hold_ = hold;
 
-                    supportHolds_.push_back(support);
+                    moveSet_.supportHolds_.push_back(support);
                 } else if (supportType == "convoy") {
-                    Resolver::Convoy* convoy;
+                    Player::Convoy* convoy;
                     findConvoy(supportedStart, convoy);
 
-                    Resolver::SupportConvoy support;
+                    Player::SupportConvoy support;
                     support.prov_ = province;
                     support.player_ = player;
                     support.convoy_ = convoy;
 
-                    supportConvoys_.push_back(support);
+                    moveSet_.supportConvoys_.push_back(support);
                 } else {
-                    Resolver::Move* move;
+                    Player::Move* move;
                     findMove(supportedStart, move);
 
-                    Resolver::SupportMove support;
+                    Player::SupportMove support;
                     support.prov_ = province;
                     support.player_ = player;
                     support.move_ = move;
 
-                    supportMoves_.push_back(support);
+                    moveSet_.supportMoves_.push_back(support);
                 }
             }
 
             file >> nextLine;
         }
     }
-    
-
-    return moves;
 }
 
-void MoveParser::resolveMoves()
+std::vector<Player::Retreat> MoveParser::parseRetreats(std::string filename)
 {
+    std::ifstream file{filename};
+    std::string nextLine("");
+    file >> nextLine;
+
+    std::vector<Player::Retreat> retreats;
+
+    while (nextLine != "endoffile") {
+        std::vector<std::string> words(split(nextLine, " "));
+
+        Player::Retreat retreat;
+        retreat.player_ = words[0];
+        retreat.prov_ = words[1];
+        retreat.retreat_ = words[2];
+
+        retreats.push_back(retreat);
+    }
     
+    return retreats;
 }
 
-int main(int argc, char** argv)
+std::vector<Player::Build> MoveParser::parseBuilds(std::string filename)
 {
-    return 1;
+    std::ifstream file{filename};
+    std::string nextLine("");
+    file >> nextLine;
+
+    std::vector<Player::Build> builds;
+
+    while (nextLine != "endoffile") {
+        std::vector<std::string> words(split(nextLine, " "));
+
+        Player::Build build;
+        build.player_ = words[0];
+        build.type_ = words[1];
+        build.prov_ = words[2];
+
+        if (words.size() > 3) {
+            build.coast_ = words[3];
+        }
+
+        builds.push_back(build);
+    }
+    
+    return builds;
+}
+
+
+
+Player::MoveSet MoveParser::resolveMoves()
+{
+    Resolver resolver(moveSet_, provinces_, players_); 
+    std::vector<std::string> resolutions = resolver.resolve();
+
+    return getResolutions(resolutions);
+}
+
+Player::MoveSet MoveParser::getResolutions(std::vector<std::string> resolutions)
+{
+    std::string message = "";
+    Player::MoveSet moveSet;
+
+    for (size_t i = 0; i < resolutions.size(); ++i) {
+        // If it is a dummy string, continue
+        if (contains(resolutions[i], "dummy")) {
+            continue;
+        }
+
+        if (resolutions[i].substr(0, 7) == "retreat") {
+            std::string retreatString = resolutions[i].substr(8, resolutions[i].size() - 1); 
+            std::vector<std::string> retreatElements = split(retreatString, ", ");
+
+            Player::Retreat retreat;
+            retreat.prov_ = retreatElements[0];
+            retreat.player_ = retreatElements[1];
+
+            moveSet.retreats_.push_back(retreat);
+        } else if (resolutions[i].substr(0,7) == "success"){
+            std::string itemString =
+                    resolutions[i].substr(8, resolutions[i].size() - 1);
+
+            if (itemString.substr(0,6) == "convoy") {
+                std::string convoyString =
+                        itemString.substr(6, itemString.size() - 1);
+                std::vector<std::string> convoyElements = split(convoyString, ", ");
+                
+                // Fleets unnecessary
+                Player::Convoy convoy;
+                convoy.dest_ = convoyElements[0];
+                convoy.start_ = convoyElements[1];
+                convoy.player_ = convoyElements[3];
+
+                moveSet.convoys_.push_back(convoy);
+            } else if (itemString.substr(0,4) == "move") {
+                std::string moveString =
+                        itemString.substr(4, itemString.size() - 1);
+                std::vector<std::string> moveElements = split(moveString, ", ");
+                
+                Player::Move move;
+                move.dest_ = moveElements[0];
+                move.start_ = moveElements[1];
+                move.player_ = moveElements[2];
+
+                moveSet.moves_.push_back(move);
+            }
+        } 
+    }
+
+    return moveSet;
 }

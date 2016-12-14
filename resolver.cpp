@@ -28,56 +28,75 @@ static std::string toLower(std::string in)
     return in;
 }
 
-Resolver::Resolver(std::vector<Resolver::Hold>          holds,
-                   std::vector<Resolver::Convoy>        convoys,
-                   std::vector<Resolver::Move>          moves,
-                   std::vector<Resolver::SupportHold>   supportHolds,
-                   std::vector<Resolver::SupportConvoy> supportConvoys,
-                   std::vector<Resolver::SupportMove>   supportMoves,
-                   std::vector<Province*>               provinces,
-                   std::vector<Player*>                 players)
+Resolver::Resolver(Player::MoveSet        moveSet,
+                   std::vector<Province*> provinces,
+                   std::vector<Player*>   players)
 {
     std::ofstream resolver;
     resolver.open("resolver.pl");
 
-    // TODO: add provinces, players, also consider coast AFTER prolog
     for (size_t i = 0; i < provinces.size(); ++i) {
         resolver << toLower("province(" + provinces[i]->getName() + ").\n");
+    }
+
+    for (size_t i = 0; i < 9; ++i) {
+        resolver << "province(dummyprovince" << i << ").\n";
     }
 
     for (size_t i = 0; i < players.size(); ++i) {
         resolver << toLower("player(" + players[i]->getName() + ").\n");
     }
-    
-    for (size_t i = 0; i < convoys.size(); ++i) {
-        std::string convoysPred("");
-        
-        std::string pred = writeConvoy(convoys[i], convoysPred);
 
+    for (size_t i = 0; i < 6; ++i) {
+        resolver << "player(dummyplayer" << i << ").\n";
+    }
+    
+    for (size_t i = 0; i < moveSet.convoys_.size(); ++i) {
+        std::string convoysPred("");
+        std::string pred = writeConvoy(moveSet.convoys_[i], convoysPred);
         resolver << toLower(convoysPred);
+    }
+
+    resolver << "convoyfleets([dummyprovince0]).\n";
+    
+    for (size_t i = 0; i < moveSet.convoys_.size(); ++i) {
+        std::string convoysPred("");
+        std::string pred = writeConvoy(moveSet.convoys_[i], convoysPred);
         resolver << toLower(pred + ".\n");
     }
 
-    for (size_t i = 0; i < moves.size(); ++i) {
-        resolver <<toLower( writeMove(moves[i]) + ".\n");
+    resolver << "convoy(dummyprovince1, dummyprovince2, convoyfleets([dummyprovince1]), dummyplayer0).\n";
+
+    for (size_t i = 0; i < moveSet.moves_.size(); ++i) {
+        std::string thing = toLower( writeMove(moveSet.moves_[i]) + ".\n");
+        resolver << thing;
+    }
+        
+    resolver << "move(dummyprovince3, dummyprovince4, dummyplayer1).\n";
+
+    for (size_t i = 0; i < moveSet.supportHolds_.size(); ++i) {
+        resolver << toLower(writeSupportHold(moveSet.supportHolds_[i]) + ".\n");
     }
 
-    for (size_t i = 0; i < supportHolds.size(); ++i) {
-        resolver << toLower(writeSupportHold(supportHolds[i]) + ".\n");
+    resolver << "supporthold(dummyprovince5, dummyplayer2, hold(dummyprovince8, dummyplayer5)).\n";
+
+    for (size_t i = 0; i < moveSet.supportConvoys_.size(); ++i) {
+        resolver << toLower(writeSupportConvoy(moveSet.supportConvoys_[i]) + ".\n");
     }
 
-    for (size_t i = 0; i < supportConvoys.size(); ++i) {
-        resolver << toLower(writeSupportConvoy(supportConvoys[i]) + ".\n");
+    resolver << "supportconvoy(dummyprovince6, dummyplayer3, convoy(dummyprovince1, dummyprovince2, convoyfleets([dummyprovince1]), dummyplayer0)).\n";
+
+    for (size_t i = 0; i < moveSet.supportMoves_.size(); ++i) {
+        resolver << toLower(writeSupportMove(moveSet.supportMoves_[i]) + ".\n");
     }
 
-    for (size_t i = 0; i < supportMoves.size(); ++i) {
-        resolver << toLower(writeSupportMove(supportMoves[i]) + ".\n");
+    resolver << "supportmove(dummyprovince7, dummyplayer4, move(dummyprovince3, dummyprovince4, dummyplayer1)).\n";
+
+    for (size_t i = 0; i < moveSet.holds_.size(); ++i) {
+        resolver << toLower(writeHold(moveSet.holds_[i]) + ".\n");
     }
 
-    for (size_t i = 0; i < holds.size(); ++i) {
-        resolver << toLower(writeHold(holds[i]) + ".\n");
-    }
-
+    resolver << "hold(dummyprovince8, dummyplayer5).\n";
 
     std::ifstream framework;
     framework.open("resolverframework.pl");
@@ -89,27 +108,34 @@ Resolver::Resolver(std::vector<Resolver::Hold>          holds,
 
     framework.close();
     resolver.close();
+}
 
+std::vector<std::string> Resolver::resolve()
+{
     system("swipl -f resolver.pl <resolver.pl> -g go,halt -t 'program'");
 
     std::ifstream ans{"answers.txt"};
     std::vector<std::string> answers;
+    std::string nextLine;
     
+
     while (getline(ans, nextLine)) {
         answers.push_back(nextLine);
     }
 
-    for (size_t i = 0; i < answers.size(); ++i) {
-        std::cout << "Answer " << i << ": " << answers[i] << ".\n";
-    }
+    //for (size_t i = 0; i < answers.size(); ++i) {
+    //    std::cout << "Answer " << i << ": " << answers[i] << ".\n";
+    //}
+
+    return answers;
 }
 
-std::string Resolver::writeHold(Resolver::Hold hold)
+std::string Resolver::writeHold(Player::Hold hold)
 { 
     return "hold(" + hold.prov_ + ", " + hold.player_ + ")";
 }
 
-std::string Resolver::writeConvoy(Resolver::Convoy convoy, std::string& convoysPred)
+std::string Resolver::writeConvoy(Player::Convoy convoy, std::string& convoysPred)
 { 
     convoysPred = "convoyFleets([";
 
@@ -130,12 +156,12 @@ std::string Resolver::writeConvoy(Resolver::Convoy convoy, std::string& convoysP
     return pred;
 }
 
-std::string Resolver::writeMove(Resolver::Move move)
+std::string Resolver::writeMove(Player::Move move)
 { 
     return "move(" + move.dest_ + ", " + move.start_ + ", " + move.player_ + ")";
 }
 
-std::string Resolver::writeSupportHold(Resolver::SupportHold supportHold)
+std::string Resolver::writeSupportHold(Player::SupportHold supportHold)
 { 
     std::string holdPred = writeHold(*(supportHold.hold_)); 
 
@@ -144,7 +170,7 @@ std::string Resolver::writeSupportHold(Resolver::SupportHold supportHold)
     return pred;
 }
 
-std::string Resolver::writeSupportConvoy(Resolver::SupportConvoy supportConvoy)
+std::string Resolver::writeSupportConvoy(Player::SupportConvoy supportConvoy)
 { 
     std::string trash;
     std::string convoyPred = writeConvoy(*(supportConvoy.convoy_), trash); 
@@ -154,7 +180,7 @@ std::string Resolver::writeSupportConvoy(Resolver::SupportConvoy supportConvoy)
     return pred;
 }
 
-std::string Resolver::writeSupportMove(Resolver::SupportMove supportMove)
+std::string Resolver::writeSupportMove(Player::SupportMove supportMove)
 { 
     std::string movePred = writeMove(*(supportMove.move_)); 
 
@@ -163,48 +189,48 @@ std::string Resolver::writeSupportMove(Resolver::SupportMove supportMove)
     return pred;
 }
 
-int main()
+/*int main()
 {
-    Resolver::Hold hold;
+    Player::Hold hold;
     hold.prov_ = "Aeg";
     hold.player_ = "Italy";
 
-    Resolver::Hold hold1;
+    Player::Hold hold1;
     hold1.prov_ = "Den";
     hold1.player_ = "Germany";
 
-    Resolver::Convoy conv;
+    Player::Convoy conv;
     conv.dest_ = "Aeg";
     conv.start_ = "Naf";
     conv.player_ = "Russia";
     conv.convoy_.push_back("Mos");
     conv.convoy_.push_back("Nth");
 
-    Resolver::Move mov;
+    Player::Move mov;
     mov.dest_ = "Aeg";
     mov.start_ = "Stp";
     mov.player_ = "Britain";
 
-    Resolver::SupportHold s1;
+    Player::SupportHold s1;
     s1.prov_ = "Par";
     s1.player_ = "France";
     s1.hold_ = &hold;
 
-    Resolver::SupportConvoy s2;
+    Player::SupportConvoy s2;
     s2.prov_ = "Mar";
     s2.player_ = "Austria-Hungary";
     s2.convoy_ = &conv;
    
-    Resolver::SupportMove s3;
+    Player::SupportMove s3;
     s3.prov_ = "War";
     s3.player_ = "Turkey";
     s3.move_ = &mov;
    
-    Resolver::SupportMove s4;
+    Player::SupportMove s4;
     s4.prov_ = "Rom";
     s4.player_ = "Turkey";
     s4.move_ = &mov;
-
+    
     Province r("Aeg");
     Province r1("Den");
     Province r2("Mos");
@@ -224,27 +250,29 @@ int main()
     Player p5("Russia");
     Player p6("France");
 
-    std::vector<Resolver::Hold> holds;
-    holds.push_back(hold);
-    holds.push_back(hold1);
+    Player::MoveSet moveSet;
 
-    std::vector<Resolver::Convoy> convoys;
-    convoys.push_back(conv);
+    moveSet.holds_.push_back(hold);
+    moveSet.holds_.push_back(hold1);
 
-    std::vector<Resolver::Move> moves;
-    moves.push_back(mov);
+    moveSet.convoys_.push_back(conv);
 
-    std::vector<Resolver::SupportHold> supportHolds;
-    supportHolds.push_back(s1);
+    moveSet.moves_.push_back(mov);
 
-    std::vector<Resolver::SupportConvoy> supportConvoys;
-    supportConvoys.push_back(s2);
+    for (size_t i = 0; i < moveSet.moves_.size(); ++i) {
+        std::cout << "move " << i << " is " << moveSet.moves_[i].player_ << moveSet.moves_[i].dest_ << "/n";
+    }
 
-    std::vector<Resolver::SupportMove> supportMoves;
-    supportMoves.push_back(s3);
-    supportMoves.push_back(s4);
+    moveSet.supportHolds_.push_back(s1);
+
+    moveSet.supportConvoys_.push_back(s2);
+
+    moveSet.supportMoves_.push_back(s3);
+    moveSet.supportMoves_.push_back(s4);
 
     std::vector<Province*> provinces;
+    std::vector<Player*> players;
+
     provinces.push_back(&r);
     provinces.push_back(&r1);
     provinces.push_back(&r2);
@@ -255,9 +283,7 @@ int main()
     provinces.push_back(&r7);
     provinces.push_back(&r8);
     provinces.push_back(&r9);
-    
 
-    std::vector<Player*> players;
     players.push_back(&p);
     players.push_back(&p1);
     players.push_back(&p2);
@@ -265,8 +291,13 @@ int main()
     players.push_back(&p4);
     players.push_back(&p5);
     players.push_back(&p6);
-
-    Resolver(holds, convoys, moves, supportHolds, supportConvoys, supportMoves, provinces, players);
     
+    Resolver resolver(moveSet, provinces, players);
+    std::vector<std::string> resolutions = resolver.resolve();
+
+    for (size_t i = 0; i < resolutions.size(); ++i) {
+        std::cout << resolutions[i] << "\n";
+    }
+
     return 0;
-}
+}*/

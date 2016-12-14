@@ -6,7 +6,7 @@ Germany, Kie, Ber, Mun
 Italy, Ven, Rom, Nap
 France, Par, Bre, Mar
 Britain, Edi, Lpl, Lon
-
+-
 Land provinces:
 Boh, Sil, Gal, Vie, Trl, Mun
 Bud, Gal, Vie, Tri, Ser, Rum
@@ -63,7 +63,7 @@ Spa, Gas, Mar, Por
 Swe, Nwy, Fin, Den
 Tun, Naf
 Den, Swe, Kie
-
+-
 Sea provinces:
 Adr, Tri, coast, Ven, coast, App, coast, Ion, Alb, coast
 Aeg, Gre, coast, Con, coast, Smy, coast, Eas, Ion, Bul, north
@@ -84,7 +84,7 @@ Nrg, Bar, Nwy, coast, Nth, Edi, coast, Cly, coast, Nat
 Ska, Swe, coast, Den, coast, Nth, Nwy, coast, Bal
 Tyn, Tus, coast, Rom, coast, Nap, coast, Ion, Tun, coast, Wes, Lyo
 Wes, Lyo, Tyn, Tun, coast, Naf, coast, Spa, south
-
+-
 Coasts:
 Tri, coast, Ven, coast, Adr, Alb, coast
 Cly, coast, Edi, coast, Nrg, Nat, Lpl, coast
@@ -131,7 +131,7 @@ Spa, south, Por, coast, Mid, Wes, Lyo, Mar, coast
 Swe, coast, Nwy, coast, Den, coast, Fin, coast, Ska, Bal, Bot
 Tun, coast, Naf, coast, Wes, Tyn, Ion
 Den, coast, Hel, Kie, coast, Bal, Ska, Nth
-
+-
 Neutral supply centers:
 Por
 Spa
@@ -166,5 +166,5 @@ Smy
 Mos
 Stp
 War
-
+-
 endoffile

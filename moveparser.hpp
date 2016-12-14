@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-//#include <castor.h>
 
 #include "player.hpp"
 #include "province.hpp"
@@ -21,61 +20,51 @@
 class MoveParser {
 public:
     /**
-     * \struct Move
-     * 
-     * \brief Contains information about an
-     * attempted move, what units are involved,
-     * what locations are involved, and how 
-     * much support it has.
+     * \brief Constructs parser with no provinces or players.
      */
-/*    struct Move {
-        std::string actorType_;
-        std::string actorCoast_; // Only if fleet on land
-        std::string actorProv_;
-        
-        enum MoveType { hold, convoy, move, support };
+    MoveParser();
 
-        MoveType moveType_;
-
-        Player::Unit* actor_;
-        std::vector<Player::Unit*> convoy_;
-        std::vector<Player::Unit*> support_;
-
-        std::vector<Province*> successProvinces_;
-        std::vector<Province*> failProvinces_;
-
-        size_t power_;
-    };
-*/
-    // TODO: make string-based structs for each movetype, different strings per situation
+    /**
+     * \brief Constructs parser with provinces and players.
+     */
+    MoveParser(std::vector<Province*> provinces, std::vector<Player*> players);
 
     /**
      * \brief Parses move orders into moves.
      */
-    void readMoves(std::string filename, std::vector<Province*> provinces);
+    void readMoves(std::string filename);
 
     /**
-     * \brief Resolves previously read moves.
+     * \brief Resolves and executes previously read moves.
      */
-    void resolveMoves();
+    Player::MoveSet resolveMoves();
+
+    /**
+     * \brief Parses retreat orders from file.
+     */
+    std::vector<Player::Retreat> parseRetreats(std::string filename);
+
+    /**
+     * \brief Parses build orders from file.
+     */
+    std::vector<Player::Build> parseBuilds(std::string filename);
 
 private:
-    std::vector<Resolver::Hold> holds_;
-    std::vector<Resolver::Convoy> convoys_;
-    std::vector<Resolver::Move> moves_;
-    std::vector<Resolver::SupportHold> supportHolds_;
-    std::vector<Resolver::SupportConvoy> supportConvoys_;
-    std::vector<Resolver::SupportMove> supportMoves_;
+    Player::MoveSet moveSet_;
+    std::vector<Province*> provinces_;
+    std::vector<Player*> players_;
 
     // Finds existing convoy.
-    int findConvoy(std::string start, Convoy* convoy);
+    int findConvoy(std::string start, Player::Convoy* convoy);
 
     // Finds existing hold.
-    int findHold(std::string start, Hold* hold);
+    int findHold(std::string start, Player::Hold* hold);
     
     // Finds existing move.
-    int findMove(std::string start, Move* move);
+    int findMove(std::string start, Player::Move* move);
 
+    // Gets resolutions
+    Player::MoveSet getResolutions(std::vector<std::string> resolutions);
 };
 
 #endif // ifndef MOVEPARSER_HPP_INCLUDED

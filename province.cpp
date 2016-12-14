@@ -12,10 +12,19 @@
 
 #include "province.hpp"
 
+Province::Province()
+: controller_("Neutral"),
+  hasCenter_(false),
+  neighbors_(0),
+  numNeighbors_(0)
+{
+}
+
 Province::Province(std::string name)
 : name_(name),
+  controller_("Neutral"),
   hasCenter_(false),
-  neighbors_(5),
+  neighbors_(0),
   numNeighbors_(0)
 {
 
@@ -47,4 +56,19 @@ bool Province::hasNeighbor(Province* province)
     }
 
     return false;
+}
+
+bool Province::hasCenter()
+{
+    return hasCenter_;
+}
+
+void Province::setController(std::string name)
+{
+    controller_ = name;
+}
+
+std::string Province::getController()
+{
+    return controller_;
 }

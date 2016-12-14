@@ -22,7 +22,7 @@ public:
     /**
      * \brief Adds a coast to the province.
      */
-    void addCoast(Coast* coast);   
+    void addCoast(Coast* coast, std::vector<Province*> neighbors);   
 
     /**
      * \brief Updates neighbors given coasts.
@@ -35,17 +35,17 @@ public:
     std::vector<Coast*> getCoasts();
 
     /**
-     * \breif Returns a pointer to the coast with the
+     * \brief Returns a pointer to the coast with the
      * given name.
-     *
-     * \post Returns 1 if it finds the coast, else 0.
      */
-    int getCoast(std::string name, Coast* coast);
+    Coast* getCoast(std::string name);
 
     /**
      * \brief Makes this province a supply center.
      */
     void makeCenter();
+    
+    void printCoasts();
 
 private:
     std::vector<Coast*> coasts_;

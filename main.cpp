@@ -1,19 +1,22 @@
 #include <iostream>
-#include "board.hpp"
+#include "game.hpp"
 
 int main()
 {
-    std::cout << "Hello World!";
+    std::cout << "Hello World!\n";
 
-/*    Player a("a");
+    Player a("a");
     Player b("b");
 
-    Province p("a", true, a);
+    Province p("a");
 
     std::vector<Province*> A = {&p, &p};
     std::vector<Player*> B = {&a,&b};
-*/
-    Board board;
 
+    Board board;
     board.uploadBoard("europe.txt");
+
+    //Game("europe.txt");
+
+    return 0;
 }

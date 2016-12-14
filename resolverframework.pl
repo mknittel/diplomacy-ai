@@ -15,7 +15,7 @@ provList([]).
 provList([X]) :- province(X).
 provList([X|T]) :- province(X), provList(T).
 
-% Verifies it's a valid power value
+% Verifies its a valid power value
 validpower(N) :- count(X, province(X), M), integer(N), between(0, M, N).
 
 % Convoy cuts if anything moves into fleet location

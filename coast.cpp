@@ -6,24 +6,29 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "coast.hpp"
 
-Coast::Coast(std::string name, LandProvince* province)
+Coast::Coast() {}
+
+Coast::Coast(std::string name, std::string province)
 : name_(name),
-  connections_(2),
+  connections_(0),
   province_(province)
 {
 
 }
 
-Coast::Coast(std::string name, std::vector<Coast*> connections, LandProvince* province)
+Coast::Coast(std::string name, std::vector<Coast*> connections, std::string province)
 : name_(name),
   connections_(connections),
   province_(province)
 {
 
 }
+
+void Coast::setName(std::string name) { name_ = name; }
 
 std::string Coast::getName() { return name_; }
 
@@ -42,17 +47,22 @@ std::vector<Coast*> Coast::getConnections()
     return connections_;
 }
 
-std::vector<SeaProvince*> Coast::getAdjacentSeas()
+std::vector<std::string> Coast::getAdjacentSeas()
 {
     return adjacentSeas_;
 }
 
-LandProvince* Coast::getProvince()
+void Coast::setProvince(std::string province)
+{
+    province_ = province;
+}
+
+std::string Coast::getProvince()
 {
     return province_;
 }
 
-void Coast::addSea(SeaProvince* seaProvince)
+void Coast::addSea(std::string seaProvince)
 {
     adjacentSeas_.push_back(seaProvince);
 }

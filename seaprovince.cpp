@@ -13,8 +13,11 @@
 #include "seaprovince.hpp"
 #include "coast.hpp"
 
-void SeaProvince::addCoast(Coast* coast)
+void SeaProvince::addCoast(Coast* coast, Province* province)
 {
     adjacentCoasts_.push_back(coast);
-    addNeighbor(new SeaProvince("hi"));
+
+    if (!hasNeighbor(province)) {
+        addNeighbor(province);
+    }
 }
